@@ -1,2 +1,4 @@
-.idea
-.allure_results
+.allure_results/
+.idea/
+__pycache__/
+*.pyc
