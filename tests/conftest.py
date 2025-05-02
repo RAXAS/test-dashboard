@@ -1,40 +1,52 @@
 import pytest
 import requests
+import random
+import string
 from faker import Faker
 
 from config.constants import AUTH_HEADERS, BASE_URL, ITEMS_HEADERS
+from config.user_utils import UserActions
 
 fake = Faker()
 
+@pytest.fixture(scope="function")
+def user_credentials():
+    user_body = {
+        "email": fake.email(),
+        "password": fake.password(),
+        "full_name": fake.name()
+    }
+    return user_body
 
 @pytest.fixture(scope="function")
-def auth_session():
-    session = requests.Session()
-    session.headers.update(AUTH_HEADERS)
+def generate_random_email_max_length(length=64):
+    characters = string.ascii_letters
+    random_email = ''.join(random.choice(characters) for _ in range(length)) + "@gmail.com"
+    return random_email
 
-    email = fake.email()
-    password = fake.password()
-    full_name = fake.name()
-    register_body = {
-        "email": email,
-        "password": password,
-        "full_name": full_name
-    }
-    registration = requests.post(f"{BASE_URL}/api/v1/users/signup/", json=register_body)
-    assert registration.status_code == 200, "Creation Error"
+@pytest.fixture(scope="function")
+def generate_random_password_max_length(length=40):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    random_password = ''.join(random.choice(characters) for _ in range(length))
+    return random_password
 
+@pytest.fixture(scope="function")
+def register_user(user_credentials):
+    response = UserActions.create_user(user_credentials)
+    return response
+
+@pytest.fixture(scope="function")
+def user_login(user_credentials, register_user):
     login_body = {
-        "username": email,
-        "password": password,
+        "username": user_credentials["email"],
+        "password": user_credentials["password"]
     }
-    login = requests.post(f"{BASE_URL}/api/v1/login/access-token/", data=login_body)
-    assert login.status_code == 200, f"Auth failed: {login.status_code}, {login.text}"
-    token = login.json()["access_token"]
-    assert token, "No access_token found"
-    session.headers.update(ITEMS_HEADERS)
-    session.headers.update({"Authorization": f"Bearer {token}"})
-    return session
+    response = UserActions.login_user(login_body)
+    return response
 
+@pytest.fixture(scope="function")
+def auth_session(user_login):
+    return UserActions.user_session(user_login.json()["access_token"])
 
 @pytest.fixture(scope="function")
 def session_without_auth():
