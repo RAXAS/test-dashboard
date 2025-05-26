@@ -9,13 +9,13 @@ class UserActions:
     @staticmethod
     def create_user(register_body):
         with allure.step("Создание пользователя"):
-            register_user_response = requests.post(f"{BASE_URL}/api/v1/users/signup/", json=register_body)
+            register_user_response = requests.post(f"{BASE_URL}/api/v1/users/signup/", json=register_body.dict())
             return register_user_response
 
     @staticmethod
     def login_user(login_body):
         with allure.step("Авторизация пользователя"):
-            login_user_response = requests.post(f"{BASE_URL}/api/v1/login/access-token/", data=login_body)
+            login_user_response = requests.post(f"{BASE_URL}/api/v1/login/access-token/", data=login_body.dict())
             return login_user_response
 
     @staticmethod

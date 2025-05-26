@@ -5,7 +5,7 @@ class ItemActions:
     @staticmethod
     def create_item(auth_session, item_data):
         with allure.step("Создание нового айтема"):
-            response = auth_session.post(f"{BASE_URL}/api/v1/items/", json=item_data)
+            response = auth_session.post(f"{BASE_URL}/api/v1/items/", json=item_data.dict())
             allure.attach(response.text, name="Response", attachment_type=allure.attachment_type.TEXT)
             return response
 
@@ -33,6 +33,6 @@ class ItemActions:
     @staticmethod
     def update_item(auth_session, item_id, update_item_data):
         with allure.step("Обновление айтема"):
-            response = auth_session.put(f"{BASE_URL}/api/v1/items/{item_id}", json=update_item_data)
+            response = auth_session.put(f"{BASE_URL}/api/v1/items/{item_id}", json=update_item_data.dict())
             allure.attach(response.text, name="Response", attachment_type=allure.attachment_type.TEXT)
             return response
