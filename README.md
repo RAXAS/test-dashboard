@@ -22,7 +22,12 @@
    pytest --alluredir=allure_results
    ```
 
-3. Сгенерируйте и откройте отчет:
+3. Добавить allure в переменную окружения (перед каждым запуском):
+   ```bash
+   $$env:Path += ";C:\Users\ADMIN\PycharmProjects\test-dashboard\allure-2.33.0\bin"
+   ```
+   
+4. Сгенерируйте и откройте отчет:
    ```bash
    allure serve allure_results
    ```
