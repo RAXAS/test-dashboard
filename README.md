@@ -27,7 +27,7 @@
    allure serve allure_results
    ```
 
-### Если возникнут проблемы с разпознованием команды allure, можно становить его через scoop
+### Если возникнут проблемы с разпознованием команды allure, можно установить его через scoop
    ```bash
    irm get.scoop.sh | iex
    scoop install allure
